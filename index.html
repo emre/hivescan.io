@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>hivescan.io</title>
+    <meta name="description" content="A client-side Hive block explorer. No backend, no indexer — reads public consensus nodes directly from your browser." />
+    <meta name="theme-color" content="#E31337" />
+
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- og:image must be an absolute URL — crawlers don't execute JS to
+         resolve a relative one. Update the domain below if this deploys
+         somewhere other than hivescan.io. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="hivescan.io" />
+    <meta property="og:title" content="hivescan.io" />
+    <meta property="og:description" content="A client-side Hive block explorer. No backend, no indexer." />
+    <meta property="og:url" content="https://hivescan.io/" />
+    <meta property="og:image" content="https://hivescan.io/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="hivescan.io" />
+    <meta name="twitter:description" content="A client-side Hive block explorer. No backend, no indexer." />
+    <meta name="twitter:image" content="https://hivescan.io/og.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
