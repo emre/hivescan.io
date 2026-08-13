@@ -1,22 +1,45 @@
 import { useSyncExternalStore } from "react";
 
-function subscribe(cb) {
-  addEventListener("hashchange", cb);
-  return () => removeEventListener("hashchange", cb);
-}
-const snapshot = () => location.hash || "#/";
+const snapshot = () => location.pathname;
 
-export function hashFor(query) {
+function subscribe(cb) {
+  function onPopState() {
+    cb();
+  }
+  function onClick(e) {
+    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    const a = e.target.closest("a");
+    if (!a || a.target) return;
+    if (a.origin !== location.origin) return;
+    const href = a.getAttribute("href");
+    if (!href || href.startsWith("#") || href.startsWith("mailto:")) return;
+    e.preventDefault();
+    navigate(a.pathname);
+  }
+  addEventListener("popstate", onPopState);
+  addEventListener("click", onClick, true);
+  return () => {
+    removeEventListener("popstate", onPopState);
+    removeEventListener("click", onClick, true);
+  };
+}
+
+export function navigate(path) {
+  history.pushState(null, "", path);
+  dispatchEvent(new PopStateEvent("popstate"));
+}
+
+export function pathFor(query) {
   const q = query.trim();
   if (!q) return null;
-  if (/^\d+$/.test(q)) return `#/block/${q}`;
-  if (/^[a-f0-9]{40}$/i.test(q)) return `#/tx/${q.toLowerCase()}`;
-  return `#/@${q.replace(/^@/, "").toLowerCase()}`;
+  if (/^\d+$/.test(q)) return `/block/${q}`;
+  if (/^[a-f0-9]{40}$/i.test(q)) return `/tx/${q.toLowerCase()}`;
+  return `/@${q.replace(/^@/, "").toLowerCase()}`;
 }
 
-export function useHashRoute() {
-  const hash = useSyncExternalStore(subscribe, snapshot, snapshot);
-  const parts = hash.slice(1).split("/").filter(Boolean);
+export function useRoute() {
+  const path = useSyncExternalStore(subscribe, snapshot, snapshot);
+  const parts = path.slice(1).split("/").filter(Boolean);
 
   if (!parts.length) return { name: "live" };
   if (parts[0] === "ops") return { name: "ops" };

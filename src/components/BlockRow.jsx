@@ -8,9 +8,9 @@ function BlockRow({ block, lastIrreversible }) {
   const pending = block.num > lastIrreversible;
   return (
     <tr>
-      <td className="m"><a href={`#/block/${block.num}`}>{N(block.num)}</a></td>
+      <td className="m"><a href={`/block/${block.num}`}>{N(block.num)}</a></td>
       <td>
-        <a href={`#/@${block.by}`}>
+        <a href={`/@${block.by}`}>
           <Avatar name={block.by} small />
           {block.by}
         </a>

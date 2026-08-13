@@ -1,13 +1,13 @@
 import { ENDPOINTS } from "../lib/rpc.js";
 import { useChain } from "../hooks/useChain.jsx";
 import { useTheme } from "../hooks/useTheme.js";
-import { hashFor } from "../hooks/useHashRoute.js";
+import { navigate, pathFor } from "../hooks/useHashRoute.js";
 import Omnibox from "./Omnibox.jsx";
 
 const TABS = [
-  { href: "#/", name: "live", label: "blocks" },
-  { href: "#/ops", name: "ops", label: "operations" },
-  { href: "#/witnesses", name: "witnesses", label: "witnesses" },
+  { href: "/", name: "live", label: "blocks" },
+  { href: "/ops", name: "ops", label: "operations" },
+  { href: "/witnesses", name: "witnesses", label: "witnesses" },
 ];
 
 export default function Masthead({ route }) {
@@ -18,7 +18,7 @@ export default function Masthead({ route }) {
     <div className="top">
       <div className="wrap">
         <div className="t1">
-          <a className="id" href="#/">
+          <a className="id" href="/">
             <span className="mark" aria-hidden="true" />
             hivescan.io
           </a>
@@ -29,7 +29,7 @@ export default function Masthead({ route }) {
               </a>
             ))}
           </nav>
-          <Omnibox onSubmit={(q) => { const h = hashFor(q); if (h) location.hash = h; }} />
+          <Omnibox onSubmit={(q) => { const p = pathFor(q); if (p) navigate(p); }} />
           <div className="ctl">
             <select value={endpoint} onChange={(e) => setEndpoint(e.target.value)} aria-label="Endpoint">
               {ENDPOINTS.map((e) => (

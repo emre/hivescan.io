@@ -33,7 +33,7 @@ export default function Tx({ id }) {
         <CopyableHash value={id} />
       </div>
       <Facts>
-        <Fact label="Block"><a href={`#/block/${tx.block_num}`}>{N(tx.block_num)}</a></Fact>
+        <Fact label="Block"><a href={`/block/${tx.block_num}`}>{N(tx.block_num)}</a></Fact>
         <Fact label="Index in block">{tx.transaction_num}</Fact>
         <Fact label="Expiration">{tx.expiration}</Fact>
         <Fact label="Signatures">{(tx.signatures ?? []).length}</Fact>

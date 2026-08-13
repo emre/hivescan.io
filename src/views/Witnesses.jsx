@@ -18,7 +18,7 @@ function Row({ witness, rank, props }) {
     <tr style={rank === CONSENSUS ? { borderBottom: "1px solid var(--rule-2)" } : undefined}>
       <td className="m rank">{rank}</td>
       <td>
-        <a href={`#/@${witness.owner}`}>
+        <a href={`/@${witness.owner}`}>
           <Avatar name={witness.owner} small />
           {witness.owner}
         </a>

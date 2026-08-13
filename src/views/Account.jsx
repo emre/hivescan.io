@@ -38,7 +38,7 @@ function WitnessSection({ name }) {
         </Fact>
         <Fact label="Signing key">{w.signing_key}</Fact>
         <Fact label="Last block produced">
-          <a href={`#/block/${w.last_confirmed_block_num}`}>{N(w.last_confirmed_block_num)}</a>
+          <a href={`/block/${w.last_confirmed_block_num}`}>{N(w.last_confirmed_block_num)}</a>
         </Fact>
         <Fact label="Total missed">{N(w.total_missed)}</Fact>
         <Fact label="Running version">{w.running_version}</Fact>

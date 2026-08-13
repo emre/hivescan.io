@@ -1,4 +1,4 @@
-import { useHashRoute } from "./hooks/useHashRoute.js";
+import { useRoute } from "./hooks/useHashRoute.js";
 import Masthead from "./components/Masthead.jsx";
 import Live from "./views/Live.jsx";
 import Ops from "./views/Ops.jsx";
@@ -19,7 +19,7 @@ function View({ route }) {
 }
 
 export default function App() {
-  const route = useHashRoute();
+  const route = useRoute();
 
   return (
     <>

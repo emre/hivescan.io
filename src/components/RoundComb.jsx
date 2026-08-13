@@ -54,7 +54,7 @@ export default function RoundComb() {
             <a
               key={w}
               className={`tick ${n === pos ? "now" : made.has(n) ? "was" : ""}`}
-              href={`#/@${w}`}
+              href={`/@${w}`}
               data-n={w}
             />
           ))}
