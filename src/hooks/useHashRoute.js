@@ -37,15 +37,30 @@ export function pathFor(query) {
   return `/@${q.replace(/^@/, "").toLowerCase()}`;
 }
 
+/** Path segments are percent-encoded in location.pathname; a malformed
+ *  escape would throw, so a bad URL degrades to the live view. */
+function decodeParts(path) {
+  try {
+    return path.slice(1).split("/").filter(Boolean).map(decodeURIComponent);
+  } catch {
+    return [];
+  }
+}
+
 export function useRoute() {
   const path = useSyncExternalStore(subscribe, snapshot, snapshot);
-  const parts = path.slice(1).split("/").filter(Boolean);
+  const parts = decodeParts(path);
 
   if (!parts.length) return { name: "live" };
   if (parts[0] === "ops") return { name: "ops" };
   if (parts[0] === "witnesses") return { name: "witnesses" };
-  if (parts[0] === "block") return { name: "block", arg: parts[1] };
-  if (parts[0] === "tx") return { name: "tx", arg: parts[1] };
-  if (parts[0].startsWith("@")) return { name: "account", arg: parts[0].slice(1) };
+  // A record view without its identifier has nothing to fetch — the views
+  // read arg unconditionally, so never hand them a route missing one.
+  if (parts[0] === "block") return parts[1] ? { name: "block", arg: parts[1] } : { name: "live" };
+  if (parts[0] === "tx") return parts[1] ? { name: "tx", arg: parts[1] } : { name: "live" };
+  if (parts[0].startsWith("@")) {
+    const name = parts[0].slice(1);
+    return name ? { name: "account", arg: name } : { name: "live" };
+  }
   return { name: "live" };
 }

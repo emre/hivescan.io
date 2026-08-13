@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useChain } from "../hooks/useChain.jsx";
 import StatusLine from "./StatusLine.jsx";
 import { SectionHead } from "./Facts.jsx";
+import { accountPath } from "../lib/url.js";
 
 /**
  * The 21 witness slots of the current round. A slot's position is derived
@@ -54,7 +55,7 @@ export default function RoundComb() {
             <a
               key={w}
               className={`tick ${n === pos ? "now" : made.has(n) ? "was" : ""}`}
-              href={`/@${w}`}
+              href={accountPath(w)}
               data-n={w}
             />
           ))}

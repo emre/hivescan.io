@@ -1,4 +1,7 @@
+import { accountPath } from "../lib/url.js";
+
 export default function Mention({ name }) {
   if (!name) return null;
-  return <a href={`/@${name}`}>{name}</a>;
+  const label = String(name);
+  return <a href={accountPath(label)}>{label}</a>;
 }

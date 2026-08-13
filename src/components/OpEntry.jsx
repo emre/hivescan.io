@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { familyOf } from "../lib/ops.js";
 import { N } from "../lib/format.js";
+import { blockPath, txPath } from "../lib/url.js";
 import OpSummary from "./OpSummary.jsx";
 
 /**
@@ -29,14 +30,14 @@ export default function OpEntry({ op, blockNum, txId, extra, open: controlledOpe
       <tr className={isOpen ? "open" : undefined} onClick={toggle}>
         {blockNum != null && (
           <td className="m">
-            <a href={`/block/${blockNum}`} onClick={(e) => e.stopPropagation()}>{N(blockNum)}</a>
+            <a href={blockPath(blockNum)} onClick={(e) => e.stopPropagation()}>{N(blockNum)}</a>
           </td>
         )}
         <td className="fam">{familyOf(op.name)}</td>
         <td className="type">{op.name}</td>
         {txId != null && (
           <td className="m">
-            <a href={`/tx/${txId}`} onClick={(e) => e.stopPropagation()}>{txId.slice(0, 8)}…</a>
+            <a href={txPath(txId)} onClick={(e) => e.stopPropagation()}>{String(txId).slice(0, 8)}…</a>
           </td>
         )}
         <td className="gist"><OpSummary name={op.name} data={op.data} /></td>

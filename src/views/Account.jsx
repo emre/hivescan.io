@@ -7,6 +7,7 @@ import Mention from "../components/Mention.jsx";
 import OpEntry from "../components/OpEntry.jsx";
 import { normalizeOp } from "../lib/ops.js";
 import { N, N3, asset, since, vestsToHP, manaPercent } from "../lib/format.js";
+import { blockPath, externalUrl } from "../lib/url.js";
 import { useTitle } from "../hooks/useTitle.js";
 
 function ResourceCredits({ name }) {
@@ -16,6 +17,16 @@ function ResourceCredits({ name }) {
   if (!rc) return null;
   const pct = manaPercent(rc.rc_manabar, Number(rc.max_rc));
   return <Fact label="Resource credits"><Gauge pct={pct} />{pct.toFixed(1)}%</Fact>;
+}
+
+/** A witness sets this string itself. Only an http(s) URL becomes a link;
+ *  anything else is shown as inert text so a javascript: or data: scheme
+ *  can't run in our origin on click. */
+function WitnessUrl({ url }) {
+  if (!url) return "—";
+  const href = externalUrl(url);
+  if (!href) return <span className="dim">{String(url)}</span>;
+  return <a href={href} target="_blank" rel="noopener noreferrer">{href}</a>;
 }
 
 /** Absent for most accounts — get_witness_by_account returns null rather
@@ -33,12 +44,10 @@ function WitnessSection({ name }) {
     <>
       <SectionHead>Witness</SectionHead>
       <Facts>
-        <Fact label="Website">
-          {w.url ? <a href={w.url} target="_blank" rel="noopener">{w.url}</a> : "—"}
-        </Fact>
+        <Fact label="Website"><WitnessUrl url={w.url} /></Fact>
         <Fact label="Signing key">{w.signing_key}</Fact>
         <Fact label="Last block produced">
-          <a href={`/block/${w.last_confirmed_block_num}`}>{N(w.last_confirmed_block_num)}</a>
+          <a href={blockPath(w.last_confirmed_block_num)}>{N(w.last_confirmed_block_num)}</a>
         </Fact>
         <Fact label="Total missed">{N(w.total_missed)}</Fact>
         <Fact label="Running version">{w.running_version}</Fact>

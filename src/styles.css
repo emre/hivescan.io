@@ -76,6 +76,9 @@ td.fam,th.fam{font-family:var(--mono);font-size:11px;color:var(--ink-3);white-sp
 td.type,th.type{white-space:nowrap;padding-right:18px}
 .dim{color:var(--ink-3)}
 .gist{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:1px;width:100%}
+tr.gone{color:var(--ink-3)}
+tr.gone td{text-decoration:line-through}
+tr.gone img{filter:grayscale(1);opacity:.5}
 tr.fresh td{animation:tint 1s ease-out}
 @keyframes tint{from{background:var(--band)}to{background:transparent}}
 @keyframes skel-pulse{0%,100%{opacity:1}50%{opacity:.5}}

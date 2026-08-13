@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { N, since } from "../lib/format.js";
+import { accountPath, blockPath } from "../lib/url.js";
 import Avatar from "./Avatar.jsx";
 
 /** Keyed by block number in the parent — React keeps this node alive across
@@ -8,9 +9,9 @@ function BlockRow({ block, lastIrreversible }) {
   const pending = block.num > lastIrreversible;
   return (
     <tr>
-      <td className="m"><a href={`/block/${block.num}`}>{N(block.num)}</a></td>
+      <td className="m"><a href={blockPath(block.num)}>{N(block.num)}</a></td>
       <td>
-        <a href={`/@${block.by}`}>
+        <a href={accountPath(block.by)}>
           <Avatar name={block.by} small />
           {block.by}
         </a>

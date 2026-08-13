@@ -6,23 +6,37 @@ import Avatar from "../components/Avatar.jsx";
 import { Note, SectionHead } from "../components/Facts.jsx";
 import { SkeletonRows } from "../components/Skeleton.jsx";
 import { N, vestsToHP } from "../lib/format.js";
+import { accountPath } from "../lib/url.js";
 
 const CONSENSUS = 20;
+const TOP = 100;
+
+/** A witness disables itself by publishing the null signing key — it keeps
+ *  its votes and rank but is skipped by the schedule, so rank alone would
+ *  overstate it. */
+const NULL_KEY = "STM1111111111111111111111111111111114T1Anm";
+const isInactive = (w) => w.signing_key === NULL_KEY;
 
 function Row({ witness, rank, props }) {
   const votes = vestsToHP(props, parseFloat(witness.votes) / 1e6);
   const quote = witness.hbd_exchange_rate ? parseFloat(witness.hbd_exchange_rate.quote) : 0;
   const price = quote ? parseFloat(witness.hbd_exchange_rate.base) / quote : null;
+  const inactive = isInactive(witness);
 
   return (
-    <tr style={rank === CONSENSUS ? { borderBottom: "1px solid var(--rule-2)" } : undefined}>
+    <tr
+      className={inactive ? "gone" : undefined}
+      style={rank === CONSENSUS ? { borderBottom: "1px solid var(--rule-2)" } : undefined}
+    >
       <td className="m rank">{rank}</td>
       <td>
-        <a href={`/@${witness.owner}`}>
+        <a href={accountPath(witness.owner)}>
           <Avatar name={witness.owner} small />
           {witness.owner}
         </a>
-        {rank > CONSENSUS && <span className="fam"> backup</span>}
+        {inactive
+          ? <span className="fam"> disabled</span>
+          : rank > CONSENSUS && <span className="fam"> backup</span>}
       </td>
       <td className="m r">{votes != null ? `${N(Math.round(votes / 1000))}k` : "—"}</td>
       <td className="m r dim">{N(witness.total_missed)}</td>
@@ -39,7 +53,7 @@ export default function Witnesses() {
   useTitle("Witnesses");
   const { request, props } = useChain();
   const { loading, data, error } = useAsync(
-    () => request("condenser_api.get_witnesses_by_vote", ["", 40]), []
+    () => request("condenser_api.get_witnesses_by_vote", ["", TOP]), []
   );
 
   return (
@@ -48,7 +62,10 @@ export default function Witnesses() {
       {error && <Note heading="The witness set could not be loaded">Every endpoint should serve this call. Try switching.</Note>}
       {(loading || data) && (
         <>
-          <SectionHead>Witnesses<span>top twenty produce every round; the rest share one backup slot</span></SectionHead>
+          <SectionHead>
+            Witnesses
+            <span>top twenty produce every round; the rest share one backup slot</span>
+          </SectionHead>
           <table>
             <colgroup>
               <col style={{ width: 46 }} /><col /><col style={{ width: 104 }} /><col style={{ width: 82 }} />

@@ -6,6 +6,7 @@ import { SkeletonTitle, SkeletonFacts } from "../components/Skeleton.jsx";
 import OpEntry from "../components/OpEntry.jsx";
 import Mention from "../components/Mention.jsx";
 import { N, since } from "../lib/format.js";
+import { blockPath, txPath } from "../lib/url.js";
 import { useTitle } from "../hooks/useTitle.js";
 
 export default function Block({ num }) {
@@ -42,7 +43,7 @@ export default function Block({ num }) {
       </Facts>
       <SectionHead right={
         <span className="pager">
-          <a href={`/block/${n - 1}`}>← {N(n - 1)}</a> · <a href={`/block/${n + 1}`}>{N(n + 1)} →</a>
+          <a href={blockPath(n - 1)}>← {N(n - 1)}</a> · <a href={blockPath(n + 1)}>{N(n + 1)} →</a>
         </span>
       }>
         Operations
@@ -61,7 +62,7 @@ export default function Block({ num }) {
               <OpEntry
                 key={op.key}
                 op={op}
-                extra={op.trx ? <a href={`/tx/${op.trx}`}>{op.trx.slice(0, 12)}…</a> : "virtual"}
+                extra={op.trx ? <a href={txPath(op.trx)}>{String(op.trx).slice(0, 12)}…</a> : "virtual"}
               />
             ))}
           </tbody>
