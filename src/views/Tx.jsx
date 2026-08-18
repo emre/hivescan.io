@@ -5,6 +5,7 @@ import CopyableHash from "../components/CopyableHash.jsx";
 import { SkeletonTitle, SkeletonFacts } from "../components/Skeleton.jsx";
 import { N } from "../lib/format.js";
 import { blockPath } from "../lib/url.js";
+import { expandEmbedded } from "../lib/ops.js";
 import { useTitle } from "../hooks/useTitle.js";
 import { useCopy } from "../hooks/useCopy.js";
 
@@ -40,7 +41,7 @@ export default function Tx({ id }) {
         <Fact label="Signatures">{(tx.signatures ?? []).length}</Fact>
       </Facts>
       <SectionHead>
-        Raw Transaction
+        Transaction
         <span>
           <button 
             onClick={() => copy(JSON.stringify(tx, null, 2))}
@@ -55,19 +56,24 @@ export default function Tx({ id }) {
               color: 'var(--ink-2)'
             }}
           >
-            {copied ? 'Copied!' : 'Copy JSON'}
+            {copied ? 'Copied!' : 'Copy raw JSON'}
           </button>
         </span>
       </SectionHead>
+      {/* Embedded documents are expanded for reading; the copy button above
+          still yields the transaction exactly as the node served it, which
+          is what matters for verifying or rebroadcasting it. */}
       <pre style={{
         background: 'var(--band)',
         padding: '12px',
         borderRadius: '2px',
         fontSize: '11.5px',
         overflow: 'auto',
-        maxHeight: '400px'
+        maxHeight: '400px',
+        whiteSpace: 'pre-wrap',
+        overflowWrap: 'anywhere'
       }}>
-        {JSON.stringify(tx, null, 2)}
+        {JSON.stringify(expandEmbedded(tx), null, 2)}
       </pre>
     </div>
   );
