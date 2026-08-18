@@ -43,6 +43,37 @@ export function normalizeOp(op) {
 export const normalizeOps = (tx) => (tx.operations ?? []).map(normalizeOp);
 
 /**
+ * custom_json — and follow, reblog, and the layer-two apps built on it —
+ * carries a whole JSON document inside a JSON *string*. Stringifying the
+ * payload as-is renders that field as one long \"-escaped line, so parse
+ * embedded documents through and let them nest as structure instead.
+ *
+ * Depth-limited: a hostile payload could otherwise nest strings-in-strings
+ * deep enough to make this recurse pathologically. A string that isn't JSON
+ * is left exactly as it was.
+ */
+export function expandEmbedded(value, depth = 0) {
+  if (depth > 6) return value;
+  if (typeof value === "string") {
+    const s = value.trim();
+    if (s.length < 2 || (s[0] !== "{" && s[0] !== "[")) return value;
+    try {
+      const parsed = JSON.parse(s);
+      return parsed && typeof parsed === "object" ? expandEmbedded(parsed, depth + 1) : value;
+    } catch {
+      return value;
+    }
+  }
+  if (Array.isArray(value)) return value.map((v) => expandEmbedded(v, depth + 1));
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([k, v]) => [k, expandEmbedded(v, depth + 1)])
+    );
+  }
+  return value;
+}
+
+/**
  * One-line summary as a token list, not a string: {mention: name} for an
  * account field, {text: "..."} for everything else. Consumers render mention
  * tokens as links and text tokens as escaped text — see <OpSummary>.

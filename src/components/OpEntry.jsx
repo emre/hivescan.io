@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { familyOf } from "../lib/ops.js";
+import { useMemo, useState } from "react";
+import { familyOf, expandEmbedded } from "../lib/ops.js";
 import { N } from "../lib/format.js";
 import { blockPath, txPath } from "../lib/url.js";
 import OpSummary from "./OpSummary.jsx";
@@ -25,6 +25,13 @@ export default function OpEntry({ op, blockNum, txId, extra, open: controlledOpe
 
   const cols = (blockNum != null ? 1 : 0) + 3 + (txId != null ? 1 : 0) + (extra !== undefined ? 1 : 0);
 
+  // Only pay for this once a row is actually expanded — the stream renders
+  // hundreds of collapsed rows a minute.
+  const json = useMemo(
+    () => (isOpen ? JSON.stringify(expandEmbedded(op.data), null, 2) : null),
+    [isOpen, op.data]
+  );
+
   return (
     <>
       <tr className={isOpen ? "open" : undefined} onClick={toggle}>
@@ -46,7 +53,7 @@ export default function OpEntry({ op, blockNum, txId, extra, open: controlledOpe
       {isOpen && (
         <tr className="jsonrow">
           <td className="json" colSpan={cols}>
-            <pre>{JSON.stringify(op.data, null, 2)}</pre>
+            <pre>{json}</pre>
           </td>
         </tr>
       )}

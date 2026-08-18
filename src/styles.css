@@ -93,7 +93,7 @@ tr.fresh td{animation:tint 1s ease-out}
 tr.open td{background:var(--wash)}
 tr[data-j]:hover td{cursor:pointer}
 td.json{padding:0 0 8px}
-td.json pre{margin:0;padding:9px 11px;background:var(--band);font:400 11.5px/1.6 var(--mono);color:var(--ink-2);overflow-x:auto}
+td.json pre{margin:0;padding:9px 11px;background:var(--band);font:400 11.5px/1.6 var(--mono);color:var(--ink-2);white-space:pre-wrap;overflow-wrap:anywhere}
 
 /* avatars, served by images.hive.blog from the account name */
 .av{width:46px;height:46px;flex:none;border-radius:2px;background:var(--band);object-fit:cover}
